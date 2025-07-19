@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+      "module": "commonjs",
+      "esModuleInterop": true,
+      "target": "es6",
+      "moduleResolution": "node",
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "outDir": "out",
+      "baseUrl": "./src",
+      "paths": {
+          "*": [
+              "*",
+              "node_modules/*"
+            ]
+      }
+  },
+  "include": [
+      "./src/**/*.ts",
+      "./src/**/*.d.ts",
+      "./node_modules/@zcode/**/*.d.ts"
+  ]
+}

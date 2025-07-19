@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "extension",
+            "request": "launch",
+            "name": "Launch Extension",
+            "console": "integratedTerminal",
+            "runtimeExecutable": "node",
+            "workspacePath": "/home/workspace/sample"
+        }
+    ]
+}

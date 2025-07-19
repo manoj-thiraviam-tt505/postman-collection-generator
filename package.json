@@ -1,0 +1,17 @@
+{
+  "name": "postman-collection-generator",
+  "version": "0.0.1",
+  "description": "It generates the postman collection for the project using xml files.",
+  "main": "out/extension.js",
+  "devDependencies": {
+    "@types/node": "^13.11.1",
+    "@zcode/types": "0.0.28",
+    "typescript": "5.2.2",
+    "nodemon": "^2.0.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "production-build": "tsc -p tsconfig.json --sourceMap false",
+    "dev": "nodemon --watch src -e ts,json,js --exec \"npm run build\""
+  }
+}
