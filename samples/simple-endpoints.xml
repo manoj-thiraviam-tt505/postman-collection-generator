@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints>
+  <info>
+    <title>Simple API Endpoints</title>
+    <version>2.0.0</version>
+    <description>Simple XML format for basic API endpoints</description>
+  </info>
+  
+  <baseUrl>https://jsonplaceholder.typicode.com</baseUrl>
+  
+  <endpoint>
+    <path>/posts</path>
+    <method>GET</method>
+    <description>Fetch all blog posts</description>
+    <parameters>
+      <param name="userId" type="integer" required="false" description="Filter posts by user ID" />
+      <param name="_limit" type="integer" required="false" description="Limit number of results" />
+      <param name="_page" type="integer" required="false" description="Page number for pagination" />
+    </parameters>
+  </endpoint>
+  
+  <endpoint>
+    <path>/posts/{id}</path>
+    <method>GET</method>
+    <description>Get a specific blog post</description>
+    <parameters>
+      <param name="id" type="integer" required="true" description="Post ID" />
+    </parameters>
+  </endpoint>
+  
+  <endpoint>
+    <path>/posts</path>
+    <method>POST</method>
+    <description>Create a new blog post</description>
+    <requestBody>
+      <contentType>application/json</contentType>
+      <example>{
+  "title": "New Post Title",
+  "body": "This is the content of the new post.",
+  "userId": 1
+}</example>
+    </requestBody>
+  </endpoint>
+  
+  <endpoint>
+    <path>/posts/{id}</path>
+    <method>PUT</method>
+    <description>Update an existing blog post</description>
+    <parameters>
+      <param name="id" type="integer" required="true" description="Post ID to update" />
+    </parameters>
+    <requestBody>
+      <contentType>application/json</contentType>
+      <example>{
+  "id": 1,
+  "title": "Updated Post Title",
+  "body": "This is the updated content.",
+  "userId": 1
+}</example>
+    </requestBody>
+  </endpoint>
+  
+  <endpoint>
+    <path>/posts/{id}</path>
+    <method>DELETE</method>
+    <description>Delete a blog post</description>
+    <parameters>
+      <param name="id" type="integer" required="true" description="Post ID to delete" />
+    </parameters>
+  </endpoint>
+  
+  <endpoint>
+    <path>/comments</path>
+    <method>GET</method>
+    <description>Get all comments</description>
+    <parameters>
+      <param name="postId" type="integer" required="false" description="Filter comments by post ID" />
+    </parameters>
+  </endpoint>
+  
+  <endpoint>
+    <path>/users</path>
+    <method>GET</method>
+    <description>Get all users</description>
+  </endpoint>
+  
+  <endpoint>
+    <path>/users/{id}/albums</path>
+    <method>GET</method>
+    <description>Get albums for a specific user</description>
+    <parameters>
+      <param name="id" type="integer" required="true" description="User ID" />
+    </parameters>
+  </endpoint>
+</endpoints>

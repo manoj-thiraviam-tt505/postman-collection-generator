@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postman Collection Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            padding: 2rem;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .upload-section:hover {
+            border-color: #007bff;
+            background: #e9ecef;
+        }
+
+        .upload-section.dragover {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #6c757d;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            background: #0056b3;
+        }
+
+        .generate-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            background: #218838;
+        }
+
+        .generate-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .option-group {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .option-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .option-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .option-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .file-name {
+            font-weight: 500;
+        }
+
+        .file-size {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .remove-file {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .remove-file:hover {
+            background: #c82333;
+        }
+
+        .result-section {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .result-content {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .result-json {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+
+        .download-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .download-btn:hover {
+            background: #138496;
+        }
+
+        .samples-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .samples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sample-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .sample-card h4 {
+            margin-bottom: 0.5rem;
+            color: #495057;
+        }
+
+        .sample-card p {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .sample-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .sample-btn:hover {
+            background: #5a6268;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .success {
+            background: #d1eddd;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Postman Collection Generator</h1>
+            <p>Generate Postman collections from XML/WADL files with ease</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Upload XML/WADL Files</h3>
+                <p>Drag and drop your XML or WADL files here, or click to browse</p>
+                <input type="file" id="fileInput" class="file-input" multiple accept=".xml,.wadl">
+                <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    Choose Files
+                </button>
+                <div class="file-list" id="fileList"></div>
+            </div>
+
+            <div class="options">
+                <div class="option-group">
+                    <label for="collectionName">Collection Name:</label>
+                    <input type="text" id="collectionName" placeholder="My API Collection" value="Generated API Collection">
+                </div>
+                
+                <div class="option-group">
+                    <label for="baseUrl">Base URL (optional):</label>
+                    <input type="text" id="baseUrl" placeholder="https://api.example.com">
+                </div>
+                
+                <div class="option-group">
+                    <label>
+                        <input type="checkbox" id="includeEnvironment">
+                        Include Environment Variables
+                    </label>
+                    <p style="margin-top: 8px; font-size: 0.9rem; color: #6c757d;">
+                        Generate a Postman environment file with common variables
+                    </p>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="button" class="generate-btn" id="generateBtn" disabled>
+                    Generate Collection
+                </button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing XML files and generating collection...</p>
+            </div>
+
+            <div class="result-section" id="resultSection">
+                <div class="result-header">
+                    <h3>Generated Collection</h3>
+                    <a href="#" class="download-btn" id="downloadBtn" download="collection.json">
+                        Download JSON
+                    </a>
+                </div>
+                <div class="result-content">
+                    <pre class="result-json" id="resultJson"></pre>
+                </div>
+            </div>
+
+            <div class="samples-section">
+                <h3>Sample Files</h3>
+                <p>Try the generator with these sample XML files:</p>
+                <div class="samples-grid" id="samplesGrid">
+                    <!-- Sample files will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFiles = [];
+        let generatedResult = null;
+
+        // DOM elements
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileList = document.getElementById('fileList');
+        const generateBtn = document.getElementById('generateBtn');
+        const loading = document.getElementById('loading');
+        const resultSection = document.getElementById('resultSection');
+        const resultJson = document.getElementById('resultJson');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const samplesGrid = document.getElementById('samplesGrid');
+
+        // File handling
+        fileInput.addEventListener('change', handleFileSelect);
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('drop', handleFileDrop);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+
+        // Generate button
+        generateBtn.addEventListener('click', generateCollection);
+
+        // Load samples on page load
+        loadSamples();
+
+        function handleFileSelect(event) {
+            addFiles(Array.from(event.target.files));
+        }
+
+        function handleDragOver(event) {
+            event.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(event) {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleFileDrop(event) {
+            event.preventDefault();
+            uploadArea.classList.remove('dragover');
+            addFiles(Array.from(event.dataTransfer.files));
+        }
+
+        function addFiles(files) {
+            const xmlFiles = files.filter(file => 
+                file.name.toLowerCase().endsWith('.xml') || 
+                file.name.toLowerCase().endsWith('.wadl')
+            );
+
+            if (xmlFiles.length === 0) {
+                showMessage('Please select XML or WADL files only.', 'error');
+                return;
+            }
+
+            selectedFiles = [...selectedFiles, ...xmlFiles];
+            updateFileList();
+            updateGenerateButton();
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div>
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${formatFileSize(file.size)}</div>
+                    </div>
+                    <button class="remove-file" onclick="removeFile(${index})">Remove</button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            updateFileList();
+            updateGenerateButton();
+        }
+
+        function updateGenerateButton() {
+            generateBtn.disabled = selectedFiles.length === 0;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function generateCollection() {
+            if (selectedFiles.length === 0) return;
+
+            loading.style.display = 'block';
+            resultSection.style.display = 'none';
+            generateBtn.disabled = true;
+
+            const formData = new FormData();
+            selectedFiles.forEach(file => {
+                formData.append('xmlFiles', file);
+            });
+
+            formData.append('collectionName', document.getElementById('collectionName').value);
+            formData.append('baseUrl', document.getElementById('baseUrl').value);
+            formData.append('includeEnvironment', document.getElementById('includeEnvironment').checked);
+
+            try {
+                const response = await fetch('/api/generate', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    generatedResult = result;
+                    displayResult(result);
+                    showMessage(`Successfully generated collection with ${result.summary.totalEndpoints} endpoints!`, 'success');
+                } else {
+                    throw new Error(result.error || 'Generation failed');
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                loading.style.display = 'none';
+                generateBtn.disabled = false;
+            }
+        }
+
+        function displayResult(result) {
+            const output = result.environment ? 
+                { collection: result.collection, environment: result.environment } : 
+                result.collection;
+                
+            resultJson.textContent = JSON.stringify(output, null, 2);
+            resultSection.style.display = 'block';
+
+            // Setup download
+            const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            downloadBtn.href = url;
+            downloadBtn.download = `${result.collection.info.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+        }
+
+        async function loadSamples() {
+            try {
+                const response = await fetch('/api/samples');
+                const data = await response.json();
+
+                if (data.success && data.samples.length > 0) {
+                    samplesGrid.innerHTML = data.samples.map(sample => `
+                        <div class="sample-card">
+                            <h4>${sample.name}</h4>
+                            <p>${sample.description}</p>
+                            <button class="sample-btn" onclick="useSample('${sample.name}', \`${sample.content.replace(/`/g, '\\`')}\`)">
+                                Use This Sample
+                            </button>
+                        </div>
+                    `).join('');
+                } else {
+                    samplesGrid.innerHTML = '<p>No sample files available.</p>';
+                }
+            } catch (error) {
+                samplesGrid.innerHTML = '<p>Could not load sample files.</p>';
+            }
+        }
+
+        async function useSample(fileName, content) {
+            loading.style.display = 'block';
+            resultSection.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/generate/content', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        xmlContent: content,
+                        collectionName: `Sample Collection - ${fileName}`,
+                        baseUrl: document.getElementById('baseUrl').value,
+                        includeEnvironment: document.getElementById('includeEnvironment').checked
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    generatedResult = result;
+                    displayResult(result);
+                    showMessage(`Successfully generated collection from sample file!`, 'success');
+                } else {
+                    throw new Error(result.error || 'Generation failed');
+                }
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        function showMessage(message, type) {
+            // Remove existing messages
+            const existingMessages = document.querySelectorAll('.error, .success');
+            existingMessages.forEach(msg => msg.remove());
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.textContent = message;
+            
+            const mainContent = document.querySelector('.main-content');
+            mainContent.insertBefore(messageDiv, mainContent.firstChild);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

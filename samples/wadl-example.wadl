@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+  <doc title="Sample WADL API">
+    A sample WADL file demonstrating different resource types and methods.
+  </doc>
+  
+  <resources base="https://api.sample.com/v1">
+    
+    <resource path="products">
+      <doc title="Product Management">
+        Endpoints for managing products in the catalog.
+      </doc>
+      
+      <method name="GET" id="getProducts">
+        <doc title="List Products">
+          Retrieve a list of all products with optional filtering.
+        </doc>
+        <request>
+          <param name="category" style="query" type="string" required="false">
+            <doc>Filter by product category</doc>
+          </param>
+          <param name="min_price" style="query" type="number" required="false">
+            <doc>Minimum price filter</doc>
+          </param>
+          <param name="max_price" style="query" type="number" required="false">
+            <doc>Maximum price filter</doc>
+          </param>
+        </request>
+        <response status="200">
+          <doc>List of products retrieved successfully</doc>
+        </response>
+      </method>
+      
+      <method name="POST" id="createProduct">
+        <doc title="Create Product">
+          Create a new product in the catalog.
+        </doc>
+        <request>
+          <representation mediaType="application/json">
+            <doc>Product data in JSON format</doc>
+          </representation>
+        </request>
+        <response status="201">
+          <doc>Product created successfully</doc>
+        </response>
+        <response status="400">
+          <doc>Invalid product data</doc>
+        </response>
+      </method>
+      
+      <resource path="{productId}">
+        <param name="productId" style="template" type="string" required="true">
+          <doc>Unique identifier for the product</doc>
+        </param>
+        
+        <method name="GET" id="getProduct">
+          <doc title="Get Product">
+            Retrieve a specific product by its ID.
+          </doc>
+          <response status="200">
+            <doc>Product details retrieved successfully</doc>
+          </response>
+          <response status="404">
+            <doc>Product not found</doc>
+          </response>
+        </method>
+        
+        <method name="PUT" id="updateProduct">
+          <doc title="Update Product">
+            Update an existing product's information.
+          </doc>
+          <request>
+            <representation mediaType="application/json">
+              <doc>Updated product data</doc>
+            </representation>
+          </request>
+          <response status="200">
+            <doc>Product updated successfully</doc>
+          </response>
+          <response status="404">
+            <doc>Product not found</doc>
+          </response>
+        </method>
+        
+        <method name="DELETE" id="deleteProduct">
+          <doc title="Delete Product">
+            Remove a product from the catalog.
+          </doc>
+          <response status="204">
+            <doc>Product deleted successfully</doc>
+          </response>
+          <response status="404">
+            <doc>Product not found</doc>
+          </response>
+        </method>
+        
+        <resource path="reviews">
+          <doc title="Product Reviews">
+            Manage reviews for a specific product.
+          </doc>
+          
+          <method name="GET" id="getProductReviews">
+            <doc title="Get Product Reviews">
+              Retrieve all reviews for a specific product.
+            </doc>
+            <request>
+              <param name="rating" style="query" type="integer" required="false">
+                <doc>Filter by rating (1-5)</doc>
+              </param>
+              <param name="sort" style="query" type="string" required="false">
+                <doc>Sort order: newest, oldest, rating</doc>
+              </param>
+            </request>
+            <response status="200">
+              <doc>Reviews retrieved successfully</doc>
+            </response>
+          </method>
+          
+          <method name="POST" id="createProductReview">
+            <doc title="Create Product Review">
+              Add a new review for the product.
+            </doc>
+            <request>
+              <representation mediaType="application/json">
+                <doc>Review data including rating and comment</doc>
+              </representation>
+            </request>
+            <response status="201">
+              <doc>Review created successfully</doc>
+            </response>
+            <response status="400">
+              <doc>Invalid review data</doc>
+            </response>
+          </method>
+        </resource>
+      </resource>
+    </resource>
+    
+    <resource path="orders">
+      <doc title="Order Management">
+        Endpoints for managing customer orders.
+      </doc>
+      
+      <method name="GET" id="getOrders">
+        <doc title="List Orders">
+          Retrieve a list of orders for the authenticated user.
+        </doc>
+        <request>
+          <param name="status" style="query" type="string" required="false">
+            <doc>Filter by order status: pending, confirmed, shipped, delivered</doc>
+          </param>
+          <param name="limit" style="query" type="integer" required="false">
+            <doc>Maximum number of orders to return</doc>
+          </param>
+        </request>
+        <response status="200">
+          <doc>Orders retrieved successfully</doc>
+        </response>
+        <response status="401">
+          <doc>Authentication required</doc>
+        </response>
+      </method>
+      
+      <method name="POST" id="createOrder">
+        <doc title="Create Order">
+          Place a new order with selected products.
+        </doc>
+        <request>
+          <representation mediaType="application/json">
+            <doc>Order details including products and shipping information</doc>
+          </representation>
+        </request>
+        <response status="201">
+          <doc>Order created successfully</doc>
+        </response>
+        <response status="400">
+          <doc>Invalid order data</doc>
+        </response>
+        <response status="401">
+          <doc>Authentication required</doc>
+        </response>
+      </method>
+      
+      <resource path="{orderId}">
+        <param name="orderId" style="template" type="string" required="true">
+          <doc>Unique identifier for the order</doc>
+        </param>
+        
+        <method name="GET" id="getOrder">
+          <doc title="Get Order">
+            Retrieve details of a specific order.
+          </doc>
+          <response status="200">
+            <doc>Order details retrieved successfully</doc>
+          </response>
+          <response status="404">
+            <doc>Order not found</doc>
+          </response>
+          <response status="401">
+            <doc>Authentication required</doc>
+          </response>
+        </method>
+        
+        <method name="PUT" id="updateOrderStatus">
+          <doc title="Update Order Status">
+            Update the status of an existing order.
+          </doc>
+          <request>
+            <representation mediaType="application/json">
+              <doc>New order status and optional notes</doc>
+            </representation>
+          </request>
+          <response status="200">
+            <doc>Order status updated successfully</doc>
+          </response>
+          <response status="404">
+            <doc>Order not found</doc>
+          </response>
+          <response status="401">
+            <doc>Authentication required</doc>
+          </response>
+        </method>
+      </resource>
+    </resource>
+  </resources>
+</application>

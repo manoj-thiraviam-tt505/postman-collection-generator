@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<api>
+  <info>
+    <title>Sample REST API</title>
+    <version>1.0.0</version>
+    <description>A sample REST API for testing Postman collection generation</description>
+  </info>
+  <baseUrl>https://api.example.com</baseUrl>
+  <endpoints>
+    <endpoint>
+      <path>/users</path>
+      <method>GET</method>
+      <description>Get all users</description>
+      <parameters>
+        <param>
+          <name>page</name>
+          <type>integer</type>
+          <required>false</required>
+          <description>Page number for pagination</description>
+        </param>
+        <param>
+          <name>limit</name>
+          <type>integer</type>
+          <required>false</required>
+          <description>Number of items per page</description>
+        </param>
+      </parameters>
+      <responses>
+        <response status="200">
+          <description>Successfully retrieved users</description>
+          <example>
+            {
+              "users": [
+                {
+                  "id": 1,
+                  "name": "John Doe",
+                  "email": "john@example.com"
+                }
+              ],
+              "total": 1,
+              "page": 1
+            }
+          </example>
+        </response>
+      </responses>
+    </endpoint>
+    
+    <endpoint>
+      <path>/users</path>
+      <method>POST</method>
+      <description>Create a new user</description>
+      <requestBody>
+        <contentType>application/json</contentType>
+        <example>
+          {
+            "name": "Jane Doe",
+            "email": "jane@example.com",
+            "age": 30
+          }
+        </example>
+      </requestBody>
+      <responses>
+        <response status="201">
+          <description>User created successfully</description>
+          <example>
+            {
+              "id": 2,
+              "name": "Jane Doe",
+              "email": "jane@example.com",
+              "age": 30,
+              "createdAt": "2024-01-01T00:00:00Z"
+            }
+          </example>
+        </response>
+        <response status="400">
+          <description>Invalid input data</description>
+        </response>
+      </responses>
+    </endpoint>
+    
+    <endpoint>
+      <path>/users/{id}</path>
+      <method>GET</method>
+      <description>Get user by ID</description>
+      <parameters>
+        <param>
+          <name>id</name>
+          <type>integer</type>
+          <required>true</required>
+          <description>User ID</description>
+        </param>
+      </parameters>
+      <responses>
+        <response status="200">
+          <description>User found</description>
+          <example>
+            {
+              "id": 1,
+              "name": "John Doe",
+              "email": "john@example.com",
+              "age": 25
+            }
+          </example>
+        </response>
+        <response status="404">
+          <description>User not found</description>
+        </response>
+      </responses>
+    </endpoint>
+    
+    <endpoint>
+      <path>/users/{id}</path>
+      <method>PUT</method>
+      <description>Update user by ID</description>
+      <parameters>
+        <param>
+          <name>id</name>
+          <type>integer</type>
+          <required>true</required>
+          <description>User ID</description>
+        </param>
+      </parameters>
+      <requestBody>
+        <contentType>application/json</contentType>
+        <example>
+          {
+            "name": "John Smith",
+            "email": "johnsmith@example.com",
+            "age": 26
+          }
+        </example>
+      </requestBody>
+      <responses>
+        <response status="200">
+          <description>User updated successfully</description>
+        </response>
+        <response status="404">
+          <description>User not found</description>
+        </response>
+      </responses>
+    </endpoint>
+    
+    <endpoint>
+      <path>/users/{id}</path>
+      <method>DELETE</method>
+      <description>Delete user by ID</description>
+      <parameters>
+        <param>
+          <name>id</name>
+          <type>integer</type>
+          <required>true</required>
+          <description>User ID</description>
+        </param>
+      </parameters>
+      <responses>
+        <response status="204">
+          <description>User deleted successfully</description>
+        </response>
+        <response status="404">
+          <description>User not found</description>
+        </response>
+      </responses>
+    </endpoint>
+  </endpoints>
+</api>
